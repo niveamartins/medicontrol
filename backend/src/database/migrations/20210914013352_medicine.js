@@ -1,6 +1,6 @@
 
 exports.up = function(knex) {
-    return knex.schema.createTable('units', function (table){
+    return knex.schema.createTable('medicine', function (table){
         table.increments('SQ_Medicine').primary();
         table.integer('FK_SQ_UserID').notNullable();
         table.float('NR_Dosage').notNullable();
@@ -15,5 +15,5 @@ exports.up = function(knex) {
 };
 
 exports.down = function(knex) {
-    return knex.schema.dropTable('units');
+    return knex.schema.dropTable('medicine');
 };
