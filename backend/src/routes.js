@@ -1,5 +1,7 @@
 const express = require('express');
+
 const medicineControllers = require('./controllers/medicineControllers');
+const unitsControllers = require('./controllers/unitsControllers');
 const userControllers = require('./controllers/userControllers');
 
 const routes = express.Router();
@@ -15,6 +17,7 @@ routes.get("/medicine/id", medicineControllers.selectByID)
 routes.post("/medicine/remove", medicineControllers.removeMedicine)
 
 
-
+routes.post("/units/create", unitsControllers.create)
+routes.get("/units/all", unitsControllers.select)
 
 module.exports = routes;
