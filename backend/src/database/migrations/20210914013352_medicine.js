@@ -1,7 +1,7 @@
-
-exports.up = function(knex) {
-    return knex.schema.createTable('medicine', function (table){
+exports.up = function (knex) {
+    return knex.schema.createTable('medicine', function (table) {
         table.increments('SQ_Medicine').primary();
+        table.string('STR_Medicine').notNullable();
         table.integer('FK_SQ_UserID').notNullable();
         table.float('NR_Dosage').notNullable();
         table.integer('FK_SQ_UnitDosageID').notNullable();
@@ -14,6 +14,6 @@ exports.up = function(knex) {
     });
 };
 
-exports.down = function(knex) {
+exports.down = function (knex) {
     return knex.schema.dropTable('medicine');
 };

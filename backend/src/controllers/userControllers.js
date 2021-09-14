@@ -13,7 +13,7 @@ module.exports = {
       !emptyValidate.status
     ) {
       return res.status(500).send({
-        message: `Verify if ${emptyValidate.emptyKey} field is not empty`,
+        message: `Verify if ${emptyValidate.emptyKey.capitalize()} field is not empty`,
       });
     }
 
@@ -37,7 +37,7 @@ module.exports = {
     if (response.status) {
       return res.status(200).send("OK");
     } else {
-      return res.status(500).send("Couldn't sign up at this time. Please, try again later.");
+      return res.status(500).send("Couldn't sign up this user at this time. Please, try again later.");
     }
   },
   async signIn(req, res) {
@@ -47,7 +47,7 @@ module.exports = {
       !emptyValidate.status
     ) {
       return res.status(500).send({
-        message: `Verify if ${emptyValidate.emptyKey} field is not empty`,
+        message: `Verify if ${emptyValidate.emptyKey.capitalize()} field is not empty`,
       });
     }
 
