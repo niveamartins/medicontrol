@@ -1,4 +1,4 @@
-const uuid = require('uuid')
+const { v4 } = require('uuid')
 
 const {
     select,
@@ -8,24 +8,35 @@ const {
 } = require("../models/models");
 
 module.exports = {
-    login(id) {
-        const token = uuid();
+    async login(id) {
+        const token = v4();
 
-        const reponse = await insert("sessions", {
+        const isLogged = await select("sessions", {
+            FK_SQ_UserID: id
+        }, ["*"])
+
+        if (isLogged.status) {
+            return {
+                status: false,
+                message: "Already logged."
+            }
+        }
+
+        const response = await insert("sessions", {
             STR_Token: token,
             FK_SQ_UserID: id
         }, ["STR_Token"])
 
-        if (reponse.status) {
+        if (response.status) {
             return {
                 status: true,
                 data: token
             };
         } else {
-            return reponse;
+            return response;
         }
     },
-    verify(token) {
+    async verify(token) {
         const response = await select("sessions", {
             STR_Token: token
         }, ["*"])
@@ -36,14 +47,14 @@ module.exports = {
             return false;
         }
     },
-    getUserID(token) {
+    async getUserID(token) {
         const response = await select("sessions", {
             STR_Token: token
         }, ["FK_SQ_UserID"])
 
         return response;
     },
-    logout(token) {
+    async logout(token) {
         const response = await remove("sessions", {
             STR_Token: token
         })

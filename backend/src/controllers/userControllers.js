@@ -18,7 +18,7 @@ module.exports = {
       });
     }
 
-    if (validators.verifyFields(req.body.email, "email")) {
+    if (!validators.verifyFields(req.body.email, "email")) {
       return res.status(500).send({
         message: "Invalid e-mail",
       });
@@ -60,17 +60,18 @@ module.exports = {
 
     userFound
       ?
-      (password = req.body.password + userFound[0].STR_UserKey) :
+      (password = req.body.password + userFound.data[0].STR_UserKey) :
       res.status(500).send("E-mail or password sent is invalid.");
 
     let session;
-    bcrypt.compareSync(password, userFound.STR_Password) ?
-      session = auth.login(userFound[0].SQ_User) :
+    
+    bcrypt.compareSync(password, userFound.data[0].STR_Password) ?
+      session = await auth.login(userFound.data[0].SQ_User) :
       res.status(500).send("E-mail or password sent is invalid.");
 
     session.status ? res.status(200).send({
       token: session.data,
-    }) : res.status(500).send("Couldn't login at this time. Please, try again later.");
+    }) : res.status(500).send(session.message);
   },
   async logOut(req, res) {
     const token = req.headers['authorization']?.replace('Bearer ', '')

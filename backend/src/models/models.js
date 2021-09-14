@@ -44,7 +44,6 @@ module.exports = {
     return response
   },
   async select(table, toFind, columns) {
-    let response;
 
     let response;
     await connection(table)

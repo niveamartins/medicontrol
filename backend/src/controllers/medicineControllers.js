@@ -11,7 +11,8 @@ module.exports = {
     async create(req, res) {
         const token = req.headers['authorization']?.replace('Bearer ', '')
 
-        if (!auth.verify(token)) {
+        const isLogged = await auth.verify(token)
+        if (!isLogged) {
             return res.status(401).send({
                 message: `Not logged.`,
             });
@@ -34,24 +35,33 @@ module.exports = {
             frequency_unit
         } = req.body
 
-        let response = await insert("medicine", {
-            STR_Medicine: name,
-            NR_Dosage: dosage,
-            FK_SQ_UnitDosageID: dosage_unit,
-            NR_Frequency: frequency,
-            FK_SQ_UnitFrequencyID: frequency_unit,
-        }, ["SQ_Medicine"]);
+        const userID = await auth.getUserID(token)
+        if (userID.status) {
+            let response = await insert("medicine", {
+                STR_Medicine: name,
+                FK_SQ_UserID: userID.data[0].FK_SQ_UserID,
+                NR_Dosage: dosage,
+                FK_SQ_UnitDosageID: dosage_unit,
+                NR_Frequency: frequency,
+                FK_SQ_UnitFrequencyID: frequency_unit,
+            }, ["SQ_Medicine"]);
 
-        if (response.status) {
-            return res.status(200).send("OK");
+            if (response.status) {
+                return res.status(200).send("OK");
+            } else {
+                return res.status(500).send("Couldn't sign up this medicine at this time. Please, try again later.");
+            }
         } else {
-            return res.status(500).send("Couldn't sign up this medicine at this time. Please, try again later.");
+            return res.status(401).send({
+                message: `Not logged.`,
+            });
         }
     },
     async update(req, res) {
         const token = req.headers['authorization']?.replace('Bearer ', '')
-
-        if (!auth.verify(token)) {
+        
+        const isLogged = await auth.verify(token)
+        if (!isLogged) {
             return res.status(401).send({
                 message: `Not logged.`,
             });
@@ -102,8 +112,9 @@ module.exports = {
     },
     async removeMedicine(req, res) {
         const token = req.headers['authorization']?.replace('Bearer ', '')
-
-        if (!auth.verify(token)) {
+        
+        const isLogged = await auth.verify(token)
+        if (!isLogged) {
             return res.status(401).send({
                 message: `Not logged.`,
             });
@@ -135,13 +146,15 @@ module.exports = {
     async selectAll(req, res) {
         const token = req.headers['authorization']?.replace('Bearer ', '')
 
-        if (!auth.verify(token)) {
+        const isLogged = await auth.verify(token)
+
+        if (!isLogged) {
             return res.status(401).send({
                 message: `Not logged.`,
             });
         }
 
-        const userID = auth.getUserID(token)
+        const userID = await auth.getUserID(token)
 
         if (userID.status) {
             let response = await select("medicine", {

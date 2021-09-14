@@ -6,6 +6,7 @@ const routes = express.Router();
 
 routes.post("/auth/signup", userControllers.signUp);
 routes.post("/auth/signin", userControllers.signIn);
+routes.post("/auth/logout", userControllers.logOut);
 
 routes.post("/medicine/create", medicineControllers.create)
 routes.post("/medicine/update", medicineControllers.update)
