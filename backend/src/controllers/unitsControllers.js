@@ -37,9 +37,11 @@ module.exports = {
             STR_UnitName: name
         }, ["*"])
 
-        if (unitFound) res.status(500).send("Medicine already registered")
+        if (unitFound.status) {
+            return res.status(500).send("Unit already registered")
+        }
 
-        let response = await insert("medicine", {
+        let response = await insert("units", {
             STR_UnitName: name,
             B_Dosage: dosage,
             B_Frequency: frequency
@@ -79,5 +81,4 @@ module.exports = {
         }
 
     },
-
 };

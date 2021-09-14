@@ -42,7 +42,9 @@ module.exports = {
                 FK_SQ_UserID: userID.data[0].FK_SQ_UserID
             }, ["*"])
 
-            if (medicineFound) res.status(500).send("Medicine already registered")
+            if (medicineFound) {
+                return res.status(500).send("Medicine already registered")
+            }
                 
             let response = await insert("medicine", {
                 STR_Medicine: name,
