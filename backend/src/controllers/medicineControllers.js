@@ -1,5 +1,5 @@
 const validators = require("../validators/validators");
-const bcrypt = require("bcrypt");
+const auth = require("./authControllers");
 const {
     select,
     insert,
@@ -9,6 +9,14 @@ const {
 
 module.exports = {
     async create(req, res) {
+        const token = req.headers['authorization']?.replace('Bearer ', '')
+
+        if (!auth.verify(token)) {
+            return res.status(401).send({
+                message: `Not logged.`,
+            });
+        }
+
         const emptyValidate = validators.notEmptyFields(req.body, ["name", "dosage", "dosage_unit", "frequency", "frequency_unit"])
         if (
             !emptyValidate.status
@@ -41,6 +49,14 @@ module.exports = {
         }
     },
     async update(req, res) {
+        const token = req.headers['authorization']?.replace('Bearer ', '')
+
+        if (!auth.verify(token)) {
+            return res.status(401).send({
+                message: `Not logged.`,
+            });
+        }
+
         const emptyValidate = validators.notEmptyFields(req.body, ["id"])
 
         if (
@@ -85,6 +101,14 @@ module.exports = {
 
     },
     async removeMedicine(req, res) {
+        const token = req.headers['authorization']?.replace('Bearer ', '')
+
+        if (!auth.verify(token)) {
+            return res.status(401).send({
+                message: `Not logged.`,
+            });
+        }
+
         const emptyValidate = validators.notEmptyFields(req.body, ["id"])
 
         if (
@@ -109,16 +133,32 @@ module.exports = {
         }
     },
     async selectAll(req, res) {
+        const token = req.headers['authorization']?.replace('Bearer ', '')
 
-        let response = await select("medicine", {
-
-        }, "*")
-
-        if (response.status) {
-            return res.status(200).send(response);
-        } else {
-            return res.status(500).send("Couldn't find any medicine. Please, try again later.");
+        if (!auth.verify(token)) {
+            return res.status(401).send({
+                message: `Not logged.`,
+            });
         }
+
+        const userID = auth.getUserID(token)
+
+        if (userID.status) {
+            let response = await select("medicine", {
+                FK_SQ_UserID: userID.data[0].FK_SQ_UserID
+            }, "*")
+
+            if (response.status) {
+                return res.status(200).send(response);
+            } else {
+                return res.status(500).send("Couldn't find any medicine. Please, try again later.");
+            }
+        } else {
+            return res.status(401).send({
+                message: `Not logged.`,
+            });
+        }
+
     },
     async selectByID(req, res) {
         const {

@@ -1,5 +1,6 @@
 const validators = require("../validators/validators");
 const bcrypt = require("bcrypt");
+const auth = require("./authControllers");
 const {
   select,
   insert
@@ -62,8 +63,30 @@ module.exports = {
       (password = req.body.password + userFound[0].STR_UserKey) :
       res.status(500).send("E-mail or password sent is invalid.");
 
+    let session;
     bcrypt.compareSync(password, userFound.STR_Password) ?
-      res.status(200).send("OK") :
+      session = auth.login(userFound[0].SQ_User) :
       res.status(500).send("E-mail or password sent is invalid.");
+
+    session.status ? res.status(200).send({
+      token: session.data,
+    }) : res.status(500).send("Couldn't login at this time. Please, try again later.");
   },
+  async logOut(req, res) {
+    const token = req.headers['authorization']?.replace('Bearer ', '')
+
+        if (!auth.verify(token)) {
+            return res.status(401).send({
+                message: `Not logged.`,
+            });
+        }
+    
+    const response = await auth.logout(token)
+
+    if (response.status) {
+      return res.status(200).send("OK");
+    } else {
+      return res.status(500).send("Couldn't logout this user at this time. Please, try again later.");
+    }
+  }
 };

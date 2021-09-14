@@ -51,9 +51,16 @@ module.exports = {
       .where(toFind)
       .select(columns)
       .then(function (res) {
-        response = {
-          status: true,
-          data: res
+        if (res.length > 0) {
+          response = {
+            status: true,
+            data: res
+          }
+        } else {
+          response = {
+            message: `[ERROR NOTHING FIND IN ${table.toString().toUpperCase()} TABLE]`,
+            status: false
+          };
         }
       })
       .catch(function (err) {
