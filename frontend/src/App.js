@@ -1,10 +1,23 @@
+import UserContext from "./contexts/userContext";
+import Routes from "./routes";
+import {useState} from 'react';
+
+
+import "./css/reset.css"
+import GlobalStyled from "./components/styled/globalStyled";
 
 
 function App() {
+  const [userData, setUserData] = useState(null)
+
   return (
-    <div className="App">
-      
-    </div>
+    <>
+      <UserContext.Provider value={{userData, setUserData}}>
+        <GlobalStyled>
+          <Routes/>
+        </GlobalStyled>
+      </UserContext.Provider>
+    </>
   );
 }
 
