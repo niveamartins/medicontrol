@@ -6,37 +6,16 @@ import Content from '../../styled/content';
 import Button from '../../styled/button';
 import { AddOutline } from 'react-ionicons'
 import styled from "styled-components";
+import AddModal from './addModal';
 
 
 
 function MedicinesPage() {
     const [medicines, setMedicines] = useState(undefined)
+    const [showModal, setShow] = useState(false)
 
     useEffect(() => {
         setMedicines([{
-            name: "Dipirona",
-            dosage: 2,
-            frequency: 1
-        }, {
-            name: "Dipirona",
-            dosage: 2,
-            frequency: 1
-        }, {
-            name: "Dipirona",
-            dosage: 2,
-            frequency: 1
-        },
-        {
-            name: "Dipirona",
-            dosage: 2,
-            frequency: 1
-        },
-        {
-            name: "Dipirona",
-            dosage: 2,
-            frequency: 1
-        },
-        {
             name: "Dipirona",
             dosage: 2,
             frequency: 1
@@ -76,7 +55,7 @@ function MedicinesPage() {
                             )
                         })}
                     </Medicines>
-                    <Button primary>
+                    <Button primary onClick={() => {setShow(true)}}>
                         <InnerButton>
                             <AddOutline
                                 color={'#FFFFFF'} />
@@ -85,6 +64,7 @@ function MedicinesPage() {
                         </InnerButton>
                     </Button>
                 </Content>
+                <AddModal show={showModal} setShowModal={setShow} />
             </>
         );
     }
@@ -101,6 +81,9 @@ const Medicines = styled.div`
         
         @media (max-width: 600px){
             justify-content: center;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
         }
 
     `;

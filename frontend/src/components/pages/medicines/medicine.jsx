@@ -16,7 +16,7 @@ function Medicine(props) {
 
   const MedicineStyled = styled.div`
     background-color: #FFF;
-    padding: 1%;
+    padding: 1.2em;
     margin: 1.2em;
     box-shadow: 2px 2px 6px #000000;
     border-radius: 5px;
@@ -26,12 +26,12 @@ function Medicine(props) {
         font-family: 'Passion One', cursive;
         font-size: 2em;
         color: #3B929C;
-        padding-right: 3%;
+        padding-right: 1.2em;
     }
 
     p {
         font-size: 1.2em;
-        padding-right: 3%;
+        padding-right: 1.2em;
     }
 
     strong {
