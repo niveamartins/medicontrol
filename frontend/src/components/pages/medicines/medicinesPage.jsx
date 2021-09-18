@@ -6,13 +6,16 @@ import Content from '../../styled/content';
 import Button from '../../styled/button';
 import { AddOutline } from 'react-ionicons'
 import styled from "styled-components";
-import AddModal from './addModal';
+import MedicineModal from './medicineModal';
+import RemoveModal from './removeModal';
 
 
 
 function MedicinesPage() {
     const [medicines, setMedicines] = useState(undefined)
-    const [showModal, setShow] = useState(false)
+    const [showMedicineModal, setShowMedicineModal] = useState(false)
+    const [showRemoveModal, setShowRemoveModal] = useState(false)
+    const [selectedMedicine, setSelectedMedicine] = useState(undefined)
 
     useEffect(() => {
         setMedicines([{
@@ -51,11 +54,11 @@ function MedicinesPage() {
                     <Medicines>
                         {medicines.map((medicine) => {
                             return (
-                                <Medicine data={medicine} />
+                                <Medicine data={medicine} setMedicineInfo={setSelectedMedicine} setShowMedicineModal={setShowMedicineModal} setShowRemoveModal={setShowRemoveModal}/>
                             )
                         })}
                     </Medicines>
-                    <Button primary onClick={() => {setShow(true)}}>
+                    <Button primary onClick={() => {setShowMedicineModal(true)}}>
                         <InnerButton>
                             <AddOutline
                                 color={'#FFFFFF'} />
@@ -64,7 +67,9 @@ function MedicinesPage() {
                         </InnerButton>
                     </Button>
                 </Content>
-                <AddModal show={showModal} setShowModal={setShow} />
+                <MedicineModal show={showMedicineModal} setShowModal={setShowMedicineModal} setMedicineInfo={setSelectedMedicine} dataToEdit={selectedMedicine} />
+                <RemoveModal show={showRemoveModal} setShowModal={setShowRemoveModal} setMedicineInfo={setSelectedMedicine} dataToDelete={selectedMedicine} />
+                        
             </>
         );
     }

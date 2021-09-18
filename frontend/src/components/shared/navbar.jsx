@@ -28,7 +28,7 @@ function NavBar() {
   
 const Title = styled.div`
   font-family: 'Passion One', cursive;
-  font-size: 2em;
+  font-size: 3em;
   color: white;
 `;
 

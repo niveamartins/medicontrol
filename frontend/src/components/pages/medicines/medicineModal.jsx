@@ -6,10 +6,12 @@ import Loading from '../../shared/loading';
 import Content from '../../styled/content';
 import Input from '../../styled/input';
 
-function AddModal(props) {
+function MedicineModal(props) {
 
     const [FrequencyOptions, setFrequencyOptions] = useState(undefined)
     const [DosageOptions, setDosageOptions] = useState(undefined)
+    const [MedicineInfo, setMedicineInfo] = useState(undefined);
+    const [title, setTitle] = useState(undefined)
 
     useEffect(() => {
         setDosageOptions([{
@@ -21,10 +23,31 @@ function AddModal(props) {
             name: "ml",
             id: 1
         }])
-    }, [])
+
+        if (props.dataToEdit) {
+            setMedicineInfo(props.dataToEdit)
+            setTitle("Editar")
+        } else {
+            setMedicineInfo({
+                name: "",
+                dosage: "",
+                frequency: ""
+            })
+            setTitle("Cadastrar")
+        }
+    }, [title, props.dataToEdit])
+
+    function handleChange(e) {
+        const {value, name} = e.target 
+        setMedicineInfo(prevState => ({
+            ...prevState,
+            [name]: value
+        }))
+    }
 
     function closeModal() {
         props.setShowModal(false)
+        props.setMedicineInfo(undefined)
     }
 
     Modal.setAppElement(document.getElementById('root'))
@@ -41,14 +64,14 @@ function AddModal(props) {
     };
 
     if (
-        FrequencyOptions === undefined || DosageOptions === undefined
+        FrequencyOptions === undefined || DosageOptions === undefined || MedicineInfo === undefined || title === undefined 
     ) {
         return (<Modal
             isOpen={props.show}
             onRequestClose={closeModal}
             style={customStyles}
             contentLabel="Registrar Medicamento">
-            <Title>Cadastrar medicamento</Title>
+            <Title>{title} medicamento</Title>
             <Content>
                 <Loading />
             </Content>
@@ -62,19 +85,19 @@ function AddModal(props) {
                     style={customStyles}
                     contentLabel="Registrar Medicamento"
                 >
-                    <Title>Cadastrar medicamento</Title>
+                    <Title>{title} medicamento</Title>
 
                     <Form>
                         <div>
                             <Label>Nome</Label>
-                            <Input />
+                            <Input value={MedicineInfo.name} name="name" onChange={handleChange}/>
                         </div>
 
                         <div>
                             <Label>Dosagem</Label>
 
                             <InputGroup>
-                                <Input group />
+                                <Input group value={MedicineInfo.dosage} name="dosage" onChange={handleChange}/>
                                 <Select>
                                     {
                                         DosageOptions.map((option) => {
@@ -88,7 +111,7 @@ function AddModal(props) {
                         <div>
                             <Label>Frequência</Label>
                             <InputGroup >
-                                <Input group />
+                                <Input group value={MedicineInfo.frequency} name="frequency" onChange={handleChange}/>
                                 <Select >
                                     {
                                         FrequencyOptions.map((option) => {
@@ -100,7 +123,7 @@ function AddModal(props) {
                         </div>
 
                         <ModalFooter>
-                            <Input group type="submit" value="Registrar" />
+                            <Input group primary type="submit" value="Registrar" />
                             <CancelButton onClick={closeModal}>Cancelar</CancelButton>
                         </ModalFooter>
                     </Form>
@@ -155,7 +178,7 @@ const ModalFooter = styled.div`
 const CancelButton = styled.p`
     font-size: 0.8em;
     color: #3B929C;
-    width: 30%;
+    width: 40%;
     display:flex;
     align-items: center;
     justify-content: center;
@@ -166,4 +189,4 @@ const CancelButton = styled.p`
 `;
 
 
-export default AddModal;
+export default MedicineModal;

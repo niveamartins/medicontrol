@@ -1,20 +1,25 @@
 
 import styled from 'styled-components';
 import Input from '../../styled/input';
-import {ReactComponent as LoginImg} from '../../../assets/imgs/login-svg.svg';
+import {ReactComponent as RegisterImg} from '../../../assets/imgs/register-svg.svg';
 import { Link } from 'react-router-dom';
 
 
-function LoginPage() {
+function RegisterPage() {
     return (
         <>
             <Box>
                 <ImgTab>
-                    <LoginImg />
+                    <RegisterImg />
                 </ImgTab>
-                <LoginTab>
+                <RegisterTab>
                     <Title>Medicontrol</Title>
                     <Form>
+                        <Group>
+                            <Label>Nome</Label>
+                            <Input />
+                        </Group>
+
                         <Group>
                             <Label>E-mail</Label>
                             <Input />
@@ -25,14 +30,14 @@ function LoginPage() {
                             <Input />
                         </Group>
 
-                        <LoginFooter>
+                        <RegisterFooter>
                             <Input group darker type="submit" value="Entrar"/>
-                            <LinkStyled to="/register">
-                                <RegisterButton>Não tem conta? Cadastre-se</RegisterButton>
+                            <LinkStyled to="/login">
+                                <LoginButton>Já tem conta? Entre.</LoginButton>
                             </LinkStyled>
-                        </LoginFooter>
+                        </RegisterFooter>
                     </Form>
-                </LoginTab>
+                </RegisterTab>
             </Box>
         </>
     );
@@ -76,7 +81,12 @@ const Group = styled.div`
     font-size: 1.2em;
 `;
 
-const LoginTab = styled.div`
+const LinkStyled = styled(Link)`
+    text-decoration: none;
+    width: 40%;
+`;
+
+const RegisterTab = styled.div`
   background-color: #3B929C;
   display: flex;
   flex-direction: column;
@@ -88,11 +98,6 @@ const LoginTab = styled.div`
   @media (max-width: 900px){
     width: 100%;
     }
-`;
-
-const LinkStyled = styled(Link)`
-    text-decoration: none;
-    width: 40%;
 `;
 
 const ImgTab = styled.div`
@@ -111,7 +116,7 @@ const ImgTab = styled.div`
   
 `;
 
-const LoginFooter = styled.div`
+const RegisterFooter = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -125,7 +130,7 @@ const LoginFooter = styled.div`
     }
 `;
 
-const RegisterButton = styled.p`
+const LoginButton = styled.p`
     font-size: 0.8em;
     color: white;
     display:flex;
@@ -141,4 +146,4 @@ const RegisterButton = styled.p`
         width: 100%;
     }
 `;
-export default LoginPage;
+export default RegisterPage;
