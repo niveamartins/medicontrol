@@ -8,6 +8,7 @@ import { AddOutline } from 'react-ionicons'
 import styled from "styled-components";
 import MedicineModal from './medicineModal';
 import RemoveModal from './removeModal';
+import getMedicines from '../../../controllers/medicineController';
 
 
 
@@ -18,11 +19,7 @@ function MedicinesPage() {
     const [selectedMedicine, setSelectedMedicine] = useState(undefined)
 
     useEffect(() => {
-        setMedicines([{
-            name: "Dipirona",
-            dosage: 2,
-            frequency: 1
-        }])
+        
     }, [])
 
 

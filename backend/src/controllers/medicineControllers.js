@@ -171,6 +171,22 @@ module.exports = {
             }, "*")
 
             if (response.status) {
+                response.data.map((medicine, index) => {
+                    let frequencyName = await select("units", {
+                        SQ_Unit: medicine.FK_SQ_UnitFrequencyID
+                    }, "*")
+
+                    frequencyName = frequencyName[0].STR_UnitName
+
+                    let dosageName = await select("units", {
+                        SQ_Unit: medicine.FK_SQ_UnitDosageID
+                    }, "*")
+
+                    dosageName = dosageName[0].STR_UnitName
+
+                    response.data[index].frequencyName = frequencyName;
+                    response.data[index].dosageName = dosageName;
+                })
                 return res.status(200).send(response);
             } else {
                 return res.status(500).send("Couldn't find any medicine. Please, try again later.");
