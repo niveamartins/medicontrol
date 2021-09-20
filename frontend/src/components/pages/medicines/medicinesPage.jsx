@@ -8,7 +8,7 @@ import { AddOutline } from 'react-ionicons'
 import styled from "styled-components";
 import MedicineModal from './medicineModal';
 import RemoveModal from './removeModal';
-import getMedicines from '../../../controllers/medicineController';
+import {getMedicines} from '../../../services/medicineServices';
 
 
 

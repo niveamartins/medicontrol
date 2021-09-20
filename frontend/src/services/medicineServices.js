@@ -1,7 +1,7 @@
 import instance from "../instance"
 
 
-export default function getMedicines(token, setMedicines) {
+function getMedicines(token, setMedicines) {
     instance.get("/medicine/all", {
         headers: {
             Authorization: "Bearer " + token
@@ -15,7 +15,7 @@ export default function getMedicines(token, setMedicines) {
     })
 }
 
-export default function sendMedicine(token, actionURL, data) {
+function sendMedicine(token, actionURL, data) {
     instance.post(actionURL, data, {
         headers: {
             Authorization: "Bearer " + token
@@ -27,3 +27,5 @@ export default function sendMedicine(token, actionURL, data) {
         return false
     })
 }
+
+export {getMedicines, sendMedicine}

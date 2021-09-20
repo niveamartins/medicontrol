@@ -171,7 +171,7 @@ module.exports = {
             }, "*")
 
             if (response.status) {
-                response.data.map((medicine, index) => {
+                response.data.map(async (medicine, index) => {
                     let frequencyName = await select("units", {
                         SQ_Unit: medicine.FK_SQ_UnitFrequencyID
                     }, "*")

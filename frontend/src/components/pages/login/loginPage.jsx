@@ -3,9 +3,34 @@ import styled from 'styled-components';
 import Input from '../../styled/input';
 import {ReactComponent as LoginImg} from '../../../assets/imgs/login-svg.svg';
 import { Link } from 'react-router-dom';
+import { useContext, useState } from 'react';
+import UserContext from '../../../contexts/userContext';
+import {login} from '../../../services/userServices'
 
 
 function LoginPage() {
+    
+    const {setUserData} = useContext(UserContext)
+    const [loginData, setLoginData] = useState({
+        email: "",
+        password: ""
+    })
+
+    function sendUser() {
+       if (!login(loginData, setUserData)) {
+           alert("não foi possível realizar o login")
+       } 
+    }
+
+    function handleChange(e) {
+        const {name, value} = e.target
+
+        setLoginData(prevState => ({
+            ...prevState,
+            [name]: value
+        }))
+    }
+
     return (
         <>
             <Box>
@@ -14,15 +39,15 @@ function LoginPage() {
                 </ImgTab>
                 <LoginTab>
                     <Title>Medicontrol</Title>
-                    <Form>
+                    <Form onSubmit={sendUser}>
                         <Group>
                             <Label>E-mail</Label>
-                            <Input />
+                            <Input type="email" required name="email" value={loginData.email} onChange={handleChange}/>
                         </Group>
 
                         <Group>
                             <Label>Senha</Label>
-                            <Input />
+                            <Input type="password" required name="password" value={loginData.password} onChange={handleChange} />
                         </Group>
 
                         <LoginFooter>

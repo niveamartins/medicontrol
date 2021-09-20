@@ -3,9 +3,31 @@ import styled from 'styled-components';
 import Input from '../../styled/input';
 import {ReactComponent as RegisterImg} from '../../../assets/imgs/register-svg.svg';
 import { Link } from 'react-router-dom';
-
+import { useState } from 'react';
+import {register} from '../../../services/userServices'
 
 function RegisterPage() {
+    const [registerData, setRegisterData] = useState({
+        name: "",
+        email: "",
+        password: ""
+    })
+
+    function handleChange(e) {
+        const {name, value} = e.target
+        console.log(name, value)
+        setRegisterData(prevState => ({
+            ...prevState,
+            [name]: value
+        }))
+    }
+    
+    function sendRegister() {
+        if (!register(registerData)) {
+            alert("não foi possível cadastrar o usuário")
+        }
+    }
+
     return (
         <>
             <Box>
@@ -14,20 +36,20 @@ function RegisterPage() {
                 </ImgTab>
                 <RegisterTab>
                     <Title>Medicontrol</Title>
-                    <Form>
+                    <Form onSubmit={sendRegister}>
                         <Group>
                             <Label>Nome</Label>
-                            <Input />
+                            <Input type="name" required name="name" value={registerData.name} onChange={handleChange}/>
                         </Group>
 
                         <Group>
                             <Label>E-mail</Label>
-                            <Input />
+                            <Input type="email" required name="email" value={registerData.email} onChange={handleChange} />
                         </Group>
 
                         <Group>
                             <Label>Senha</Label>
-                            <Input />
+                            <Input type="password" required name="password" value={registerData.password} onChange={handleChange} />
                         </Group>
 
                         <RegisterFooter>
