@@ -1,13 +1,13 @@
 import instance from "../instance"
 
 
-function getMedicines(token, setMedicines) {
-    instance.get("/medicine/all", {
+async function getMedicines(token, setMedicines) {
+    await instance.get("/medicine/all", {
         headers: {
             Authorization: "Bearer " + token
         }
     }).then((response) => {
-        setMedicines(response.data)
+        setMedicines(response.data.data)
 
     }).catch((err) => {
         console.log(err)
@@ -15,8 +15,8 @@ function getMedicines(token, setMedicines) {
     })
 }
 
-function sendMedicine(token, actionURL, data) {
-    instance.post(actionURL, data, {
+async function sendMedicine(token, actionURL, data) {
+    await instance.post(actionURL, data, {
         headers: {
             Authorization: "Bearer " + token
         }

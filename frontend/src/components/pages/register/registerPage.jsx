@@ -1,10 +1,10 @@
 
 import styled from 'styled-components';
 import Input from '../../styled/input';
-import {ReactComponent as RegisterImg} from '../../../assets/imgs/register-svg.svg';
-import { Link } from 'react-router-dom';
+import { ReactComponent as RegisterImg } from '../../../assets/imgs/register-svg.svg';
+import { Link, useHistory } from 'react-router-dom';
 import { useState } from 'react';
-import {register} from '../../../services/userServices'
+import { register } from '../../../services/userServices'
 
 function RegisterPage() {
     const [registerData, setRegisterData] = useState({
@@ -13,19 +13,27 @@ function RegisterPage() {
         password: ""
     })
 
+    let history = useHistory()
+
     function handleChange(e) {
-        const {name, value} = e.target
-        console.log(name, value)
+        const { name, value } = e.target
         setRegisterData(prevState => ({
             ...prevState,
             [name]: value
         }))
     }
-    
-    function sendRegister() {
-        if (!register(registerData)) {
-            alert("não foi possível cadastrar o usuário")
-        }
+
+    async function sendRegister(e) {
+        e.preventDefault()
+
+        await register(registerData).then((res) => {
+            console.log(res)
+            if (!res) {
+                alert("Não foi possível cadastrar o usuário.")
+            } else {
+                history.push('/login')
+            }
+        })
     }
 
     return (
@@ -36,10 +44,10 @@ function RegisterPage() {
                 </ImgTab>
                 <RegisterTab>
                     <Title>Medicontrol</Title>
-                    <Form onSubmit={sendRegister}>
+                    <Form onSubmit={(e) => sendRegister(e)}>
                         <Group>
                             <Label>Nome</Label>
-                            <Input type="name" required name="name" value={registerData.name} onChange={handleChange}/>
+                            <Input type="name" required name="name" value={registerData.name} onChange={handleChange} />
                         </Group>
 
                         <Group>
@@ -53,7 +61,7 @@ function RegisterPage() {
                         </Group>
 
                         <RegisterFooter>
-                            <Input group darker type="submit" value="Entrar"/>
+                            <Input group darker type="submit" value="Entrar" />
                             <LinkStyled to="/login">
                                 <LoginButton>Já tem conta? Entre.</LoginButton>
                             </LinkStyled>

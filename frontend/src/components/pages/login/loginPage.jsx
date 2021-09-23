@@ -2,7 +2,7 @@
 import styled from 'styled-components';
 import Input from '../../styled/input';
 import {ReactComponent as LoginImg} from '../../../assets/imgs/login-svg.svg';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { useContext, useState } from 'react';
 import UserContext from '../../../contexts/userContext';
 import {login} from '../../../services/userServices'
@@ -16,10 +16,17 @@ function LoginPage() {
         password: ""
     })
 
-    function sendUser() {
-       if (!login(loginData, setUserData)) {
+    let history = useHistory()
+
+    async function sendUser(e) {
+       e.preventDefault() 
+       const response = await login(loginData, setUserData)
+       console.log(response)
+       if (!response) {
            alert("não foi possível realizar o login")
-       } 
+       }  else {
+            history.push('/medicines')
+       }
     }
 
     function handleChange(e) {
@@ -39,7 +46,7 @@ function LoginPage() {
                 </ImgTab>
                 <LoginTab>
                     <Title>Medicontrol</Title>
-                    <Form onSubmit={sendUser}>
+                    <Form onSubmit={(e) => sendUser(e)}>
                         <Group>
                             <Label>E-mail</Label>
                             <Input type="email" required name="email" value={loginData.email} onChange={handleChange}/>

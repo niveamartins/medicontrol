@@ -37,15 +37,18 @@ module.exports = {
         }
     },
     async verify(token) {
+        let status;
         const response = await select("sessions", {
             STR_Token: token
         }, ["*"])
 
         if (response.status) {
-            return true;
+            status = true;
         } else {
-            return false;
+            status = false;
         }
+
+        return status;
     },
     async getUserID(token) {
         const response = await select("sessions", {

@@ -1,34 +1,58 @@
 import instance from "../instance"
 
-function login(data, setUserData) {
-    instance.post("/auth/signin", data).then((response) => {
+async function login(data, setUserData) {
+    let status;
+    await instance.post("/auth/signin", data).then((response) => {
         setUserData(response.data)
+        const token = response.data.token
+        localStorage.setItem("token", token)
+        status = true;
 
     }).catch((err) => {
         console.log(err)
-        return false
+        status = false
     })
+
+    return status
+}
+
+function verifyLogin(setUserData) {
+    const token = localStorage.getItem("token")
+    
+    if (token) {
+        setUserData({
+            token: token
+        })
+        return true
+    } else {
+        return false
+    }
 }
 
 
-function register(data) {
-    instance.post("/auth/signup", data).then(() => {
-        return true;
+async function register(data) {
+    let status;
+
+    await instance.post("/auth/signup", data).then(() => {
+        status = true;
     }).catch((err) => {
         console.log(err)
-        return false
+        status = false
     })
+
+    return status
 }
 
-function logout(token) {
-    instance.post("/auth/logout", token).then(() => {
-        return true;
+async function logout(token) {
+    let status;
+    await instance.post("/auth/logout", token).then(() => {
+        status = true;
     }).catch((err) => {
         console.log(err)
-        return false
+        status = false
     })
 }
 
-export {login, logout, register}
+export {login, logout, register, verifyLogin}
 
 

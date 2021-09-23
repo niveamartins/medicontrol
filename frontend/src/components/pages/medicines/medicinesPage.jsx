@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import Loading from '../../shared/loading';
 import Medicine from './medicine';
 import NavBar from "../../shared/navbar";
@@ -9,6 +9,8 @@ import styled from "styled-components";
 import MedicineModal from './medicineModal';
 import RemoveModal from './removeModal';
 import {getMedicines} from '../../../services/medicineServices';
+import UserContext from '../../../contexts/userContext';
+import { verifyLogin } from '../../../services/userServices';
 
 
 
@@ -17,10 +19,18 @@ function MedicinesPage() {
     const [showMedicineModal, setShowMedicineModal] = useState(false)
     const [showRemoveModal, setShowRemoveModal] = useState(false)
     const [selectedMedicine, setSelectedMedicine] = useState(undefined)
+    const {userData, setUserData} = useContext(UserContext)
 
     useEffect(() => {
         
-    }, [])
+        if (medicines === undefined) {
+            if (userData) {
+                getMedicines(userData.token, setMedicines)
+            } else {
+                verifyLogin(setUserData)
+            }
+        }
+    }, [userData])
 
 
     if (medicines === undefined) {
@@ -40,6 +50,16 @@ function MedicinesPage() {
                     <h1>
                         Não há medicamentos cadastrados
                     </h1>
+
+                    <Button primary onClick={() => {setShowMedicineModal(true)}}>
+                        <InnerButton>
+                            <AddOutline
+                                color={'#FFFFFF'} />
+
+                            Adicionar Medicamento
+                        </InnerButton>
+                    </Button>
+                    <MedicineModal show={showMedicineModal} setShowModal={setShowMedicineModal} setMedicineInfo={setSelectedMedicine} dataToEdit={selectedMedicine} />
                 </Content>
             </>
         )
@@ -65,7 +85,7 @@ function MedicinesPage() {
                     </Button>
                 </Content>
                 <MedicineModal show={showMedicineModal} setShowModal={setShowMedicineModal} setMedicineInfo={setSelectedMedicine} dataToEdit={selectedMedicine} />
-                <RemoveModal show={showRemoveModal} setShowModal={setShowRemoveModal} setMedicineInfo={setSelectedMedicine} dataToDelete={selectedMedicine} />
+                <RemoveModal show={showRemoveModal} setShowModal={setShowRemoveModal} setMedicineInfo={setSelectedMedicine} dataToDelete={selectedMedicine} setMedicines={setMedicines} />
                         
             </>
         );

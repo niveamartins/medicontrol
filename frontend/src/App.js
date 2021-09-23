@@ -14,7 +14,7 @@ function App() {
     <>
       <UserContext.Provider value={{userData, setUserData}}>
         <GlobalStyled>
-          <Routes/>
+          <Routes setUserData={setUserData}/>
         </GlobalStyled>
       </UserContext.Provider>
     </>

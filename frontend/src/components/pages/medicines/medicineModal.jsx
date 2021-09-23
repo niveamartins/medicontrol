@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 
 import Modal from 'react-modal';
 import styled from 'styled-components';
+import UserContext from '../../../contexts/userContext';
+import { getMedicines, sendMedicine } from '../../../services/medicineServices';
 import Loading from '../../shared/loading';
 import Content from '../../styled/content';
 import Input from '../../styled/input';
@@ -10,8 +12,15 @@ function MedicineModal(props) {
 
     const [FrequencyOptions, setFrequencyOptions] = useState(undefined)
     const [DosageOptions, setDosageOptions] = useState(undefined)
-    const [MedicineInfo, setMedicineInfo] = useState(undefined);
+    const [MedicineInfo, setMedicineInfo] = useState({
+        name: "",
+        dosage: "",
+        frequency: "",
+        frequency_unit: 1,
+        dosage_unit: 1
+    });
     const [title, setTitle] = useState(undefined)
+    const {userData} = useContext(UserContext)
 
     useEffect(() => {
         setDosageOptions([{
@@ -31,18 +40,36 @@ function MedicineModal(props) {
             setMedicineInfo({
                 name: "",
                 dosage: "",
-                frequency: ""
+                frequency: "",
+                frequency_unit: 6,
+                dosage_unit: 8
             })
             setTitle("Cadastrar")
         }
     }, [title, props.dataToEdit])
 
+    async function handleSubmit(e) {
+        e.preventDefault()
+
+        await sendMedicine(userData.token, "/medicine/create", MedicineInfo)
+        await getMedicines(userData.token, props.setMedicines)
+    }
+
     function handleChange(e) {
         const {value, name} = e.target 
-        setMedicineInfo(prevState => ({
-            ...prevState,
-            [name]: value
-        }))
+
+        if (name === "name") {
+            setMedicineInfo(prevState => ({
+                ...prevState,
+                [name]: value
+            }))
+        } else {
+            setMedicineInfo(prevState => ({
+                ...prevState,
+                [name]: Number(value)
+            }))
+        }
+        
     }
 
     function closeModal() {
@@ -87,7 +114,7 @@ function MedicineModal(props) {
                 >
                     <Title>{title} medicamento</Title>
 
-                    <Form>
+                    <Form onSubmit={(e) => handleSubmit(e)}>
                         <div>
                             <Label>Nome</Label>
                             <Input value={MedicineInfo.name} name="name" onChange={handleChange}/>
@@ -97,7 +124,7 @@ function MedicineModal(props) {
                             <Label>Dosagem</Label>
 
                             <InputGroup>
-                                <Input group value={MedicineInfo.dosage} name="dosage" onChange={handleChange}/>
+                                <Input group type="number" value={MedicineInfo.dosage} name="dosage" onChange={handleChange}/>
                                 <Select>
                                     {
                                         DosageOptions.map((option) => {
@@ -111,7 +138,7 @@ function MedicineModal(props) {
                         <div>
                             <Label>Frequência</Label>
                             <InputGroup >
-                                <Input group value={MedicineInfo.frequency} name="frequency" onChange={handleChange}/>
+                                <Input group type="number" value={MedicineInfo.frequency} name="frequency" onChange={handleChange}/>
                                 <Select >
                                     {
                                         FrequencyOptions.map((option) => {

@@ -28,7 +28,7 @@ module.exports = {
       STR_Email: req.body.email
     }, "*");
 
-    if (userFound) res.status(500).send("User already registered")
+    if (userFound.data !== undefined) return res.status(500).send("User already registered")
 
     const crypto = require("crypto");
 

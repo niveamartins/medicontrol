@@ -156,14 +156,15 @@ module.exports = {
         const token = req.headers['authorization']?.replace('Bearer ', '')
 
         const isLogged = await auth.verify(token)
+       
 
         if (!isLogged) {
-            return res.status(401).send({
-                message: `Not logged.`,
-            });
+            return res.status(403)
         }
 
         const userID = await auth.getUserID(token)
+
+       
 
         if (userID.status) {
             let response = await select("medicine", {
@@ -189,7 +190,13 @@ module.exports = {
                 })
                 return res.status(200).send(response);
             } else {
-                return res.status(500).send("Couldn't find any medicine. Please, try again later.");
+                if (response.message === '[ERROR NOTHING FIND IN MEDICINE TABLE]') {
+                    return res.status(200).send({
+                        data: []
+                    })
+                } else {
+                    return res.status(500).send("Couldn't find any medicine. Please, try again later.");
+                }
             }
         } else {
             return res.status(401).send({
